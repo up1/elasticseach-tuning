@@ -1,0 +1,64 @@
+1. Create Analyzer
+PUT order/
+{
+  "settings": {
+    "index": {
+      "max_ngram_diff": 20
+    },
+    "analysis": {
+      "analyzer": {
+        "autocomplete": {
+          "tokenizer": "my_tokenizer",
+          "filter": [
+            "lowercase"
+          ]
+        }
+      },
+      "tokenizer": {
+        "my_tokenizer": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 15
+        }
+      }
+    }
+  }
+}
+
+2. Testing analyzer
+POST order/_analyze
+{
+  "analyzer": "autocomplete", 
+  "text": "สันติ  แซ่แป๊ะ"
+}
+
+3. Custom mapping
+PUT /order/_mapping
+{
+  "properties": {
+    "order_number": {
+      "type": "text",
+      "analyzer": "autocomplete"
+    }
+  }
+}
+
+4. Index data
+POST /order/_doc
+{
+  "order_id": 8620175,
+  "order_number": "สันติ  แซ่แป๊ะ",
+  "product_name": ["Test 01 bath", "Test 01 bath", "Test 01 bath"]
+}
+
+5. Query with term query
+GET order/_search
+{
+  "query": {
+    "term": {
+      "order_number": {
+        "value": "สัน"
+      }
+    }
+  }
+}
