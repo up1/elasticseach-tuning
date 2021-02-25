@@ -1,0 +1,12 @@
+Outline
+- Design index for search and suggestion data (product, order, customer)
+	- Preparing data for Elasticsearch
+	- Index structure
+	- Structure of document
+	- Type of fields/properties
+	- Analyzer and Tokenizer in each fields/properties
+- Search and Filter data (product, order, customer)
+	- Term query
+	- Boolean query
+	- Scoring and boosting
+	- Tuning query performance
