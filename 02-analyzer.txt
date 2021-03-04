@@ -1,5 +1,6 @@
 DELETE xcom_order
 
+
 PUT xcom_order
 {
   "settings": {
@@ -9,12 +10,12 @@ PUT xcom_order
     "analysis": {
       "analyzer": {
         "order_analyzer": {
-          "tokenizer": "order_tokenizer",
-          "filter": [ "trim" ]
+          "tokenizer": "whitespace",
+          "filter": ["3_20_ngram"]
         }
       },
-      "tokenizer": {
-        "order_tokenizer": {
+      "filter": {
+        "3_20_ngram": {
           "type": "ngram",
           "min_gram": 3,
           "max_gram": 20
