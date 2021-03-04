@@ -11,7 +11,7 @@ PUT xcom_order
       "analyzer": {
         "order_analyzer": {
           "tokenizer": "whitespace",
-          "filter": ["3_20_ngram"]
+          "filter": ["3_20_ngram", "lowercase"]
         }
       },
       "filter": {
