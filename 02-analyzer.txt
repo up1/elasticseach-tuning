@@ -1,0 +1,112 @@
+DELETE xcom_order
+
+PUT xcom_order
+{
+  "settings": {
+    "index": {
+      "max_ngram_diff": 20
+    },
+    "analysis": {
+      "analyzer": {
+        "order_analyzer": {
+          "tokenizer": "order_tokenizer",
+          "filter": [ "trim" ]
+        }
+      },
+      "tokenizer": {
+        "order_tokenizer": {
+          "type": "ngram",
+          "min_gram": 3,
+          "max_gram": 20
+        }
+      }
+    }
+  }
+}
+
+POST xcom_order/_analyze
+{
+  "analyzer": "order_analyzer", 
+  "text": [
+    "Total🍎🌈 แม่กุญแจ เหล็ก 38 มม"
+  ]
+}
+
+PUT xcom_order/_mapping
+{
+  "properties": {
+    "search": {
+      "type": "text",
+      "analyzer": "order_analyzer",
+      "fields": {
+        "keyword": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+
+GET xcom_order/_mapping
+
+
+POST xcom_order/_doc
+{
+  "order_id": 27769093,
+  "tenant_id": 8319,
+  "channel_id": 25534,
+  "admin_id": 0,
+  "status": true,
+  "created_time": 1614862920,
+  "updated_time": 1614862941,
+  "confirmed_time": 1614862941,
+  "print_label": 10,
+  "print_invoice": 10,
+  "state": 3,
+  "progress": 1,
+  "pack": 1,
+  "search": [
+    "368696275519870", 
+    "นางสาวชุติกาจณ์ คนิตถานนท์ ", 
+    "0959120898",
+    "มนตรี ภูฆัง ",
+    "Total แม่กุญแจ เหล็ก 38 มม. รุ่น TLK31381 ( Iron Padlock ) - ไม่รวมค่าขนส่ง"
+  ]
+}
+
+GET xcom_order/_search
+
+
+GET xcom_order/_search
+{
+  "query": {
+    "term": {
+      "search": {
+        "value": "แม่"
+      }
+    }
+  }
+}
+
+GET xcom_order/_search
+{
+  "query": {
+    "bool": {
+      "filter": [
+        { "term": { "tenant_id": 8319 }},
+        { "term": { "channel_id": 25534 }},
+        { "term": { "status": true }},
+        { "term": { "state": 3 }},
+        { "term": { "progress": 1 }},
+        { "term": { "pack": 1 }}
+      ],
+      "must": [
+        {"term": {
+          "search": {
+            "value": "แม่"
+          }
+        }}
+      ]
+    }
+  }
+}
